@@ -1,0 +1,82 @@
+.data
+number:
+	.word 4
+	.word 9
+	.word 11
+	.word 7
+	.word 25
+size:
+	.word 5
+
+remainder:
+	.word 1
+	.word 5
+	.word 8
+	.word 3
+	.word 4
+
+.text
+main:
+	la s0, number
+	la s1, remainder
+
+	la t0, size
+	lw s2, 0(t0)
+
+	mv a0, s0 #int[] num
+	mv a1, s1 #int[] rem
+	mv a2, s2 #size
+	jal findMinX
+	j exit
+
+findMinX:
+	addi sp, sp, -12
+	sw s2, 0(sp)
+	sw s1, 4(sp)
+	sw s0, 8(sp)
+	mv s2, a2 #k
+	mv s1, a1 #rem
+	mv s0, a0 #num
+
+	addi t0, zero, 1 #int x -> t0
+
+outerLoop:
+	add t1, zero, zero #j
+	mv t5, t1 #index counter
+
+innerLoop: #check if x % num[j] is rem[j]
+
+	bge t1, s2, endInnerLoop #break if j >= k
+
+	add t2, t5, s0
+	lw t2, 0(t2) #num[j] -> t2
+
+	add t3, t5, s1
+	lw t3, 0(t3) #rem[j] -> t3
+
+	rem t4, t0, t2 #x % num[j] -> t4
+	bne t4, t3, endInnerLoop #x % num[j] != rem[j]
+
+	addi t1, t1, 1 #j++
+	addi t5, t5, 4 #index counter ++
+	j innerLoop
+
+endInnerLoop:
+	beq t1, s2, endOuterLoop #if j == k, end!
+	addi t0, t0, 1 #x++
+	j outerLoop
+
+endOuterLoop:
+	mv a0, t0
+
+	lw s2, 0(sp)
+	lw s1, 4(sp)
+	lw s0, 8(sp)
+	addi sp, sp, 12
+	jr ra
+
+exit:
+	li a7, 1
+	ecall
+
+	

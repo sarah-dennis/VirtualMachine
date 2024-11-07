@@ -1,0 +1,28 @@
+
+MASTER TODO LIST
+
+
+
+
+EXISTING BUGS
+
+  * If user presses "play" button multiple times too quickly, the program can
+	return incorrect values (YAAL - PrimeFactorization)
+	
+  * Clicking disassemble button before assembly throws NumberFormatException
+  
+  * Clicking hex view button with no machine code throws IndexOutOfBoundsException
+ 
+  * Can't receive spacebar input in YAAL input field
+
+
+THINGS TO IMPROVE
+
+  * Every ParseException thrown is an error, some could be warnings instead and
+	not stop control flow
+	
+  * Fix how big and small labels zoom
+  
+  * Create os.setSP?
+	
+	

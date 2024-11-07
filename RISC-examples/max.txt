@@ -1,0 +1,16 @@
+#Returns maximum of two given values, and tests function calling. Returns :7:
+
+main: addi a0, zero, 3
+addi a1, zero, 7
+jal max
+j exit
+
+max: slt t0, a0, a1 
+beq t0, zero, arg0 #if a0 NOT less than a1, branch
+add t1, zero, a1  #otherwise a0 less than a1, so a1 greater and gets stored
+jr ra
+
+arg0: add t1, zero, a0 #a0 must be greater or equal, gets stored
+jr ra
+
+exit: add s0, zero, t1

@@ -1,0 +1,145 @@
+quick_sort_helper:
+	addiw	a5,a1,1
+	blt	a5,a2,.L13
+	ret
+.L13:
+	addi	sp,sp,-32
+	sd	ra,24(sp)
+	sd	s0,16(sp)
+	sd	s1,8(sp)
+	sd	s2,0(sp)
+	slli	a5,a1,2
+	add	a5,a0,a5
+	lw	a7,0(a5)
+	addiw	a6,a2,-1
+	bge	a1,a6,.L7
+	mv	s1,a1
+	j	.L6
+.L4:
+	sw	a7,0(a3)
+	add	a5,a0,a5
+	sw	a4,-4(a5)
+	addiw	s1,s1,1
+.L5:
+	ble	a6,s1,.L3
+.L6:
+	addi	a5,s1,1
+	slli	a5,a5,2
+	add	a3,a0,a5
+	lw	a4,0(a3)
+	bge	a7,a4,.L4
+	slli	a5,a6,2
+	add	a5,a0,a5
+	lw	t1,0(a5)
+	sw	a4,0(a5)
+	sw	t1,0(a3)
+	addiw	a6,a6,-1
+	j	.L5
+.L7:
+	mv	s1,a1
+.L3:
+	mv	s2,a2
+	mv	s0,a0
+	mv	a2,s1
+	call	quick_sort_helper
+	mv	a2,s2
+	addiw	a1,s1,1
+	mv	a0,s0
+	call	quick_sort_helper
+	ld	ra,24(sp)
+	ld	s0,16(sp)
+	ld	s1,8(sp)
+	ld	s2,0(sp)
+	addi	sp,sp,32
+	jr	ra
+quick_sort:
+	addi	sp,sp,-16
+	sd	ra,8(sp)
+	mv	a2,a1
+	li	a1,0
+	call	quick_sort_helper
+	ld	ra,8(sp)
+	addi	sp,sp,16
+	jr	ra
+print_int:
+	addi	sp,sp,-16
+	sd	ra,8(sp)
+	mv	a1,a0
+	lui	a0,%hi(.LC0)
+	addi	a0,a0,%lo(.LC0)
+	call	printf
+	ld	ra,8(sp)
+	addi	sp,sp,16
+	jr	ra
+print_array:
+	addi	sp,sp,-32
+	sd	ra,24(sp)
+	sd	s0,16(sp)
+	sd	s1,8(sp)
+	sd	s2,0(sp)
+	mv	s2,a0
+	mv	s1,a1
+	li	a0,91
+	call	putchar
+	blez	s1,.L19
+	lw	a0,0(s2)
+	call	print_int
+	li	a5,1
+	ble	s1,a5,.L19
+	addi	s0,s2,4
+	addiw	s1,s1,-2
+	slli	s1,s1,32
+	srli	s1,s1,32
+	slli	s1,s1,2
+	addi	s2,s2,8
+	add	s1,s1,s2
+	lui	s2,%hi(.LC1)
+.L20:
+	addi	a0,s2,%lo(.LC1)
+	call	printf
+	lw	a0,0(s0)
+	call	print_int
+	addi	s0,s0,4
+	bne	s0,s1,.L20
+.L19:
+	lui	a0,%hi(.LC2)
+	addi	a0,a0,%lo(.LC2)
+	call	puts
+	ld	ra,24(sp)
+	ld	s0,16(sp)
+	ld	s1,8(sp)
+	ld	s2,0(sp)
+	addi	sp,sp,32
+	jr	ra
+print_string:
+	addi	sp,sp,-16
+	sd	ra,8(sp)
+	call	printf
+	ld	ra,8(sp)
+	addi	sp,sp,16
+	jr	ra
+main:
+	addi	sp,sp,-16
+	sd	ra,8(sp)
+	sd	s0,0(sp)
+	lui	a0,%hi(.LC3)
+	addi	a0,a0,%lo(.LC3)
+	call	printf
+	lui	s0,%hi(.LANCHOR0)
+	li	a1,8
+	addi	a0,s0,%lo(.LANCHOR0)
+	call	print_array
+	li	a1,8
+	addi	a0,s0,%lo(.LANCHOR0)
+	call	quick_sort
+	lui	a0,%hi(.LC4)
+	addi	a0,a0,%lo(.LC4)
+	call	printf
+	li	a1,8
+	addi	a0,s0,%lo(.LANCHOR0)
+	call	print_array
+	li	a0,0
+	ld	ra,8(sp)
+	ld	s0,0(sp)
+	addi	sp,sp,16
+	jr	ra

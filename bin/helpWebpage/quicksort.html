@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Click Game</title>
+</head>
+
+<style>
+body {
+    background-color: #F0D8FF;
+}
+
+* {
+	font-family: courier;
+}
+</style>
+
+<body>
+
+<pre>
+function main()
+	$message = "Number of elements to sort..."
+	call _print_string($message)
+   	$n = call _read()
+    	$a = call _allocate($n)
+    	call random_fill(1000, $a, $n)
+    
+    	$x = 10
+    	call _print_char($x)
+    
+    	$message = "Elements before sorting..."
+	call _print_string($message)
+	
+    	call print_array($a, $n)
+    	call quicksort($a, $n)
+    
+    	$x = 10
+    	call _print_char($x)
+    
+    	$message = "Elements after sorting..."
+	call _print_string($message)
+	
+    	call print_array($a, $n)
+    	return
+    
+
+function quicksort($a, $n)
+    	call qs_help($a, 0, $n)
+    	return
+   
+function qs_help($a, $start, $stop)
+    	$t = $start + 1
+    	if $t >= $stop goto skip
+        $p = call partition($a, $start, $stop)
+        call qs_help($a, $start, $p)
+        $t = $p + 1
+        call qs_help($a, $t, $stop)
+skip:
+    	return
+
+
+function partition($a, $start, $stop)
+    	$p = $start   # current pivot index
+    	$pv = load from $a; $p   # value to pivot around
+    	$r = $stop - 1   # index of last (rightmost) item remaining to consider
+loop:
+    	if $p >= $r goto loop_exit
+        $t = $p + 1
+        $lv = load from $a; $t
+        if $lv <= $pv goto move_pivot
+        $rv = load from $a; $r   # next value to consider from right side
+        store $lv at $a; $r   # a[r] = lv
+        store $rv at $a; $t   # a[p + 1] = rv
+        $r = $r - 1
+        goto merge
+move_pivot:
+        store $pv at $a; $t   # a[p + 1] = pv
+        store $lv at $a; $p   # a[p] = lv
+        $p = $p + 1
+merge:
+    	goto loop
+loop_exit:    
+    	return $p
+
+
+function print_array($a, $n)
+   	$i = 0
+loop:
+    	if $i >= $n goto loop_exit
+        $x = load from $a; $i
+        call _print($x)
+        $i = $i + 1
+    	goto loop
+loop_exit:
+	return
+	
+function random_fill($c, $a, $n) 
+	$i = 0
+loop:
+	if $i == $n goto loop_exit
+	$x = call _random($c)
+	store $x at $a; $i
+	$i = $i + 1
+	goto loop
+loop_exit:
+	return	
+	
+</pre>
+
+<a href="yaal_examples.html">Back</a>
+	
+</body>
+
+</html>

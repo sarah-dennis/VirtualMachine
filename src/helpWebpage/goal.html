@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Click Game</title>
+</head>
+
+<style>
+body {
+    background-color: #F0D8FF;
+}
+
+* {
+	font-family: courier;
+}
+</style>
+
+<body>
+
+<pre>
+
+# simple grid game 
+# player moves with WASD
+# goal moves randomly
+# get goal before time is up
+# game over text displayed on grid
+
+function main()
+	$$PLAYER_CHAR = 'P'
+	$$GOAL_CHAR = 'G'
+	$$SPIKE_AMT = 45
+	$$SPIKE_CHAR = '∆'
+	$$GOAL_SPEED = 100
+        $$PLAYER = call _random($$GRID_SIZE)
+	$$GOAL = call _random($$GRID_SIZE)
+        store $$PLAYER_CHAR at $$GRID_INDEX; $$PLAYER  # draw 'P' at specified location
+	call spike_maker($$SPIKE_AMT)
+        store $$GOAL_CHAR at $$GRID_INDEX; $$GOAL
+        handle key with key_handler 
+        schedule goal_mover at $$GOAL_SPEED
+        schedule times_up at 10000
+        $$GAME_ON = 1 
+        return 0
+	
+function spike_maker($amt)
+	$$SPIKE_A = call _allocate($amt)
+	$t = $amt
+loop:
+	if $t == 0 goto exit
+	$pos = call _random($$GRID_SIZE)
+	store $pos at $$SPIKE_A; $t
+	store $$SPIKE_CHAR at $$GRID_INDEX; $pos
+	$t = $t - 1
+	goto loop
+exit:
+	return
+	
+function key_handler($key)
+	#Uppercase ASCII codes for letters
+	$a = 65
+	$d = 68 
+	$s = 83
+	$w = 87
+	if $key == $a goto handle_a
+	if $key == $d goto handle_d
+	if $key == $s goto handle_s
+	if $key == $w goto handle_w
+	goto exit
+handle_a: #left
+	call move_player(-1)
+	return
+handle_d: #right
+	call move_player(1)
+	return
+handle_s: #down
+	call move_player($$COLUMNS)
+	return
+handle_w: #up
+	$t = -1 * $$COLUMNS
+	call move_player($t)
+	return
+exit:
+	return
+
+function move_player($d)
+	$t = $$PLAYER + $d
+	if $t < 0 goto exit
+	if $t >= $$GRID_SIZE goto exit
+	store ' ' at $$GRID_INDEX; $$PLAYER
+	$$PLAYER = $t
+	store 'P' at $$GRID_INDEX; $$PLAYER
+	if $$PLAYER == $$GOAL goto win
+	$counter = 0
+spike_loop:
+	if $counter > $$SPIKE_AMT goto exit
+	$pos = load from $$SPIKE_A; $counter
+	if $$PLAYER == $pos goto lose_exit
+	$counter = $counter + 1
+	goto spike_loop
+exit:
+	return
+lose_exit:
+	store 'X' at $$GRID_INDEX; $$PLAYER
+	call times_up()
+	return
+win:
+	$a = call _allocate(10)
+	store 'G' at $a; 0
+	store 'O' at $a; 1
+	store 'A' at $a; 2
+	store 'L' at $a; 3
+	store '!' at $a; 4
+	call display_text($a, 498)
+	$$GAME_ON = 0 
+	call _stop()
+	return
+	
+function goal_mover()
+start:
+	if $$GAME_ON == 0 goto final_exit
+	$r = call _random(4)
+	if $r == 0 goto left
+	if $r == 1 goto up
+	if $r == 2 goto right
+	$d = $$COLUMNS
+	goto merge
+left:
+	$d = -1
+	goto merge
+up:
+	$d = -1 * $$COLUMNS
+	goto merge
+right:
+	$d = 1
+merge:
+	$t = $$GOAL + $d
+	if $t < 0 goto exit
+	if $t >= $$GRID_SIZE goto exit
+	$counter = 0
+spike_check:
+	if $counter > $$SPIKE_AMT goto spike_exit
+	$pos = load from $$SPIKE_A; $counter
+	if $t == $pos goto start
+	$counter = $counter + 1
+	goto spike_check
+spike_exit:
+	store 0 at $$GRID_INDEX; $$GOAL
+	$$GOAL = $t
+	store $$GOAL_CHAR at $$GRID_INDEX; $$GOAL
+exit:
+	schedule goal_mover at $$GOAL_SPEED
+final_exit:
+	return
+    
+
+function times_up()
+	$a = call _allocate(15)
+	store 'G' at $a; 0
+	store 'A' at $a; 1
+	store 'M' at $a; 2
+	store 'E' at $a; 3
+	store ' ' at $a; 4
+	store 'O' at $a; 5
+	store 'V' at $a; 6
+	store 'E' at $a; 7
+	store 'R' at $a; 8
+	store '!' at $a; 9
+	call display_text($a, 455)
+	$$GAME_ON = 0
+	call _stop()
+	return
+
+
+function display_text($array, $location)
+	call _clear_graphics()
+	$i = 0
+loop:
+ 	$c = load from $array; $i
+	if $c == 0 goto loop_exit
+        store $c at $$GRID_INDEX; $location
+        $i = $i + 1
+        $location = $location + 1
+	goto loop
+loop_exit:
+	return
+</pre>
+
+<a href="yaal_examples.html">Back</a>
+	
+</body>
+
+</html>

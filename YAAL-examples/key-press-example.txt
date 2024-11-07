@@ -1,0 +1,11 @@
+function main()
+	$$symbol = 64
+	$$pos = 0
+	store $$symbol at $$GRID_INDEX; $$pos
+	handle key with rando
+	return
+function rando($k)
+	store 0 at $$GRID_INDEX; $$pos
+	$$pos = call _random(1000)
+	store $$symbol at $$GRID_INDEX; $$pos
+	return

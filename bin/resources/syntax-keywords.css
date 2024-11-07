@@ -1,0 +1,34 @@
+.function-y {
+	-fx-fill: #c65c00; /* orange-y sunset */
+}
+
+.memory {
+	-fx-fill: #ed5cb5; /* dark pink */
+}
+
+.control {
+	-fx-fill: #9b008e; /* dark purple */
+}
+
+.comment {
+	-fx-fill: #757575; /* grey (sonic silver) */
+}
+
+.variable {
+	-fx-fill: #770073; /* purple (html) */
+}
+
+.operation-r {
+	/* -fx-fill: #c40035; /* red (ncs) */
+	-fx-fill: #221199;
+}
+
+.label {
+	/* -fx-fill: #aecf00;  vivid lime green */
+	-fx-fill: #115522;
+	-fx-font-weight: bold;
+}
+
+.directive {
+	-fx-fill: #ff7a00; /* orange (heat wave) */
+}

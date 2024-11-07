@@ -1,0 +1,41 @@
+function main()
+        $$player = call _random($$GRID_SIZE)
+	store 'P' at $$GRID_INDEX; $$player   # draw 'P' at specified location	
+	handle key with key_handler
+	return 
+function key_handler($k)
+	#Uppercase ASCII codes for letters
+	$a = 65
+	$d = 68 
+	$s = 83
+	$w = 87
+	if $k == $a goto handle_a
+	if $k == $d goto handle_d
+	if $k == $s goto handle_s
+	if $k == $w goto handle_w
+    goto exit
+handle_a: #left
+    call move_player(-1)
+    return
+handle_d: #right
+    call move_player(1)
+	return
+handle_s: #down
+	call move_player($$COLUMNS)
+	return
+handle_w: #up
+    $t = -1 * $$COLUMNS
+    call move_player($t)
+	return
+exit:
+	return
+	
+function move_player($d)
+    $t = $$player + $d
+    if $t < 0 goto exit
+    if $t >= $$GRID_SIZE goto exit
+    store ' ' at $$GRID_INDEX; $$player
+    $$player = $t
+    store 'P' at $$GRID_INDEX; $$player
+exit:
+	return

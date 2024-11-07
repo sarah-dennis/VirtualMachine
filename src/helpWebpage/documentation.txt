@@ -1,0 +1,247 @@
+A user's guide
+
+Navigating the YAAL user interface
+
+i.    Programs are written in the text box on the left
+ii.   Messages to the programmer will print in the grey box below.
+iii.  The square button in the lower left corner will toggle the table display between
+      variables and main memory. Global variables are displayed on the left, and 
+      local variables are displayed on the right.
+iv.   Graphics will display in the green box. Each 8bit-pixel corresponds to a memory 
+      address, the starting address is specified in the global variable table.
+v.    The program counter specifies which line of code is currently being executed.
+vi.   The symbol table will display functions and labels with their corresponding
+      line numbers. Click on a symbol in the table to jump to that line in the code. 
+vii.  Setting a label as a breakpoint will cause the program to halt upon reaching
+      that point in its execution.
+viii. After code is written in the code area, it must be assembled using the wrench
+      tool before it can be executed.
+ix.   There are 3 different styles of execution. 
+        1. An animated run, which will highlight each line in the code area as 
+      it is executed. This will be insightful for beginner programmers, but will 
+      slow down the execution time of code. 
+        2. An all out run, the fastest way to execute a program from start to finish.
+      Removing the restrictions on speed by not updating the graphics through execution.
+        3. A step mode, where only one instruction is executed at a time. After stepping
+      through an instruction, the user may switch to an alternate run mode to finish execution.
+
+Basic Principles
+
+i. All instructions must occur within a function. Functions must end with a return statement.
+   Function names must be unique, and should only contain letters(a-zA-Z) and underscores.
+  
+              >> function example_function()
+              >>      ....
+              >> return
+              
+ii. Users may specify two types of variables. Local variables are visible only within
+    the scope of their function. Global variables are visible within all functions.
+    Traditionally, global variables are in uppercase. 
+    
+              >> $local_variable = 2
+              >> $$GLOBAL_VARIABLE = 86
+              
+iii. Instructions are executed in order of their line number by default.
+     Labels facilitate the creation of loops and branches within a program.
+     Labels must be unique within each function.
+     
+              >> function example_function()
+              >>      ...
+              >> example_label:
+              >>       ...
+              >> return
+     
+iv. Goto statements are the simplest way to jump around within a program
+    Specify a label that exists elsewhere in the current function, 
+    and upon executing the goto instruction, the program will jump to that label.
+         
+              >> function example_function()
+              >>      ...
+              >> example_label:
+              >>      ...
+              >>      goto example_label
+              >>      ...
+              >> return
+
+v. If statements provide conditional jumping within the program and are an extension
+   of the goto statement. The user may use any boolean operation as a condition. 
+   If false, the program will not jump and will continue to the next line.
+   
+              >> function example_function()
+              >>      ...
+              >> example_label:
+              >>      ...
+              >>      if $x == $y goto example_label
+              >>      ...
+              >> return
+
+vi. Call statements are used to jump from one function to another.
+    
+            >> function example_function()
+            >>      ...
+            >> call better_function():
+            >>      ...
+            >> return
+            >>
+            >> function better_function()
+            >>      ...
+            >> return
+    
+vii. The return statement at the close of a function indicates that the program 
+     should jump back to the line just after where the function was called from.
+     Functions may return an integer or local variable. In the example below, $x
+     will be assigned the value of $z upon the completion of better_function().
+     
+            >> function example_function()
+            >>      ...
+            >> $x = call better_function()
+            >>      ...
+            >> return
+            >>
+            >> function better_function()
+            >>      ...
+            >> return $z
+     
+viii. A function may take any number of arguments. In the declaration of the function,
+     these arguments should be listed as local variables, and may then be referred to 
+     for the remainder of the function. In calling a function, the user may pass in 
+     any integer or current local variable. In the example below, when better_function() 
+     is called, $a will be assigned the value of $x, and $b will be assigned the value 63.
+     
+            >> function example_function()
+            >>      ...
+            >> call better_function($x, 63):
+            >>      ...
+            >> return
+            >>
+            >> function better_function($a, $b)
+            >>      ...
+            >> return
+
+Operations and Manipulating Variables
+
+i. The YAAl language supports basic arithmetic operations that may be
+   used on any combination of local variables, global variables, and integers.
+   
+            >> $x = $a + 4
+            >> $a = 43 - $y
+            >> $$F = $x * $y
+            >> $y = 100 / $a
+            >> $x = $y % 2
+
+
+ii. There is also a broad range of boolean comparison operations, particularly 
+    for use in the if statements described above. If assigned to a variable, 
+    the operation will return 1 if true and 0 if false. Again, these operations
+    may be used on any combination of local, global variables, and integers.
+
+            >> if $x == $y goto label
+            >> if $x != $y goto label
+            >> $z = $x > 6
+            >> $y = $x < 100
+            >> if $x <= 42 goto label
+            >> if $y >= $x goto label
+            
+iii. Be aware that each line may only include a single operation. 
+     The following are not permitted:
+            !! >> $x = $a + $b + $c 
+            !! >> if $x == $y + $z goto label
+
+Working with main memory
+
+i. We should think of main memory as a sequence of slots, each with an integer address.
+   Values in main memory are clumsier to access than values in variables, but has 
+   the advantage that it is easy to store data in an ordered fashion. This is particularly 
+   useful for storing strings, or ordered lists.
+   
+   |____|____|____|____|____|____|____|____|____|____|  
+      0    1    2    3    4    5    6    7    8    9    
+
+ii. Load and Store operations are used to access values in main memory. 
+    In the load instruction below, $a contains an address in memory, and $x is given
+    the value that is housed at that address. Similarly for the store instruction, 
+    $a contains a memory address, and the value of $x is saved at that address.
+    
+            >> $x = load from $a
+            >> store $x at $a
+
+          
+iii. We may also specify 1/4 slots of main memory. An address stored in $a, followed
+     by 0, 1, 2, or 3 will specify the first through fourth quarter block of memory.
+     
+          >> $x = load from $a; 3
+          >> store $x at $a; 2
+    
+     |_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|_:_:_:_|  
+         0       1       2       3       4       5       6       7       8       9   
+
+            
+Strings
+
+i. A character (using single quotes) may be assigned to a variable. The ASCII value of that character will be 
+   stored directly in the variable.
+   
+            >> $x = 'f'
+
+ii. A string (using double quotes) may also be assigned to a variable. This string is translated to ASCII and 
+   stored in main memory. The variable will actually be assigned the start address of
+   the string in memory. Note, the end of a string in memory is signified by a 0.
+   
+          >> $x = "Hello!"
+
+iii. There are various methods to print strings and read in strings from a user tha t will
+    be described in System Operations and Included Functions below.
+
+System Operations and Included Functions
+
+i. The YAAL interface provides several built in methods that are called as though 
+   they are any other function that exists in your program.
+   
+   1. To force the program to end
+          >> call _stop ()
+          
+   2. To print an integer or integer valued variable
+          >> call _print ($x)
+
+   3. To print a string from memory address stored in the variable $a       
+          >> call _print_string ($a)
+
+   4. To print a character saved in a variable $x
+          >> call _print_char($x)
+
+   5. To read in an integer into the variable $x
+          >> $x = call _read()
+
+   6. To read in a character into the variable $x
+          >> $x = call _read_char()
+
+   7. To read in a string to main memory, and store the starting address at a variable $a
+          >> $a = call _read_string()  
+          
+   8. If the user wishes to store a list of integers into main memory, the slots should
+      be requested from the system first, to ensure there are no conflicts with other 
+      information attempting to be stored simultaneously. This instruction asks for $x
+      amount of memory, and saves the starting memory address at $a.
+          >> $a = call _allocate($x)
+          
+   9. To generate a random integer (with an optional maximum value $m)
+          >> $x = call _random($m)
+
+   10. To zero all values in main memory
+          >> call _clear_memory()
+
+Graphics
+
+   i. The YAAL interface supports a graphical environment. The graphics screen is a 40x25 grid where each cell is linked
+      to an address in memory. The starting address and dimensions are special global variables that are always available
+      for access by a program. Any values stored in the graphics range of main memory will be converted using Unicode and
+      drawn to the corresponding cell on the graphics screen. Hence the load and store operations are all that is needed
+      to draw. The following instruction will draw a small circle at position (0,0) on the grid
+      
+      	  >> store 2662 at $$GRAPHICS_INDEX
+      	  
+      
+   ii. To clear the graphics screen (i.e. the graphics range of main memory),
+   		
+   		>> call _clear_graphics()
+

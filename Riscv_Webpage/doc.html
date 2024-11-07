@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>The RISC/YAAL Simulator</title>
+    <script src="RISCV-webpage.js"></script>
+</head>
+
+<style>
+* {
+    font-family: courier;
+}
+p {
+        margin: 20px;
+}
+
+li {
+    margin: 10px;
+
+}
+h3 {
+    text-align: center;
+}
+img {
+    height: auto;
+    max-width: 98%;
+}
+
+.box{
+  padding-bottom: 800px;
+}
+</style>
+
+<body>
+
+
+ <h3>Purpose of Software</h3>
+
+ <p> Currently, there are many methods for teaching beginner programming, many of which involve the introduction of object-oriented programming early on. In this project, we set out to create a different approach from this: teaching programming through the principles of assembly language. While it is unimportant and overwhelming to teach a beginner the details of computer hardware and binary numbers, there are some aspects of assembly language we found would be helpful for a novice. Some of these aspects include restricting code to one operation per line and utilizing labels and jumps to change control flow.</p>
+
+<p>Based on this principle, our team created a new language called YAAL (Yonkers Abstract Assembly Language) and a corresponding simulator to run it. This language has many shared features of a high-level programming language for the user's ease (such as unrestricted variable defining, standard arithmetic operations, and functions with parameters), but still holds the fundamental principles of assembly language underneath. The software was finished in time to be tested by novice high school students. They not only gave us useful feedback on our program, but also were able to learn the language and create multiple small programs within the software.</p>
+
+<p>Besides implementing YAAL, our team also created a simulator for the RISC-V architecture that rus on the same virtual machine. We were aware of helpful simulators for MIPS, such as the MARS software, but could not find any well-established simulators for RISC. Seeing as this could be a useful program for future computer organization classes, as RISC is now more widely used than MIPS, we chose to implement the base RISC-V instructions along with a few set directives (.word, .string, and .skip). We hope this tool can be used in the feature as an educational tool in  teaching introductory programming, as well as within college-level computer organization classes.</p>
+
+
+<h3>Navigating the User Interface</h3>
+
+ <p>This software allows editing and running in both RISC-V and YAAL. Each language editor has a different layout for their different features. The YAAL editor has a graphics window for displaying visuals created from YAAL code, along with a table recording local and global variables. Since our implementation of  RISC does not have graphical support and has a predefined set of variables, the graphics window and variable tables are replaced by a display showing each instruction in numerical machine code format and a table showing all the current values for each register.</p>
+<div class = "box">
+ <div style="float: left; width: 55%; ">
+    <img src="risc-v_images/Main.png", id="interface", align="left", vspace = 150>
+
+  </div>
+<div style="float: right; width: 45%; max-height: 800px">
+<ol type="i" id="list">
+        <li><p id="1" onmouseover="switchImage(1);" onmouseout="reset();">Programs are written in the text box on the left.</p></li>
+        <li><p id="2" onmouseover="switchImage(2);" onmouseout="reset();">The machine code is displayed upon assembling RISC code.</p></li>
+	<li><p id="3" onmouseover="switchImage(3);" onmouseout="reset();">Messages to the programmer will print in the grey box below.</p></li>
+	<li><p id="4" onmouseover="switchImage(4);" onmouseout="reset();">The registers and their current values are displayed upon clicking the R button in the lower right corner. </p></li>
+	<li><p id="5" onmouseover="switchImage(5);" onmouseout="reset();">Each memory address and the current value stored at that address are displayed upon clicking the M button in the lower right corner. The user can search for a section of memory by typing in the beginning value. </p></li>
+	<li><p id="6" onmouseover="switchImage(6);" onmouseout="reset();">The program counter specifies which line of code is currently being executed.</p></li>
+	<li><p id="7" onmouseover="switchImage(7);" onmouseout="reset();">The symbol table will display functions and labels with their corresponding line numbers. Click on a symbol in the table to jump to that line in the code.</p></li>
+	<li><p id="8" onmouseover="switchImage(8);" onmouseout="reset();">The stack pointer visualization displays the distribution of memory between the stack and the heap.</p></li>
+  <li><p id="9" onmouseover="switchImage(9);" onmouseout="reset();">Runs the program as fast as possible.</p></li>
+  <li><p id="10" onmouseover="switchImage(10);" onmouseout="reset();">Steps through the program one instruction at a time.</p></li>
+	<li><p id="11" onmouseover="switchImage(11);" onmouseout="reset();">Resets the program counter, registers/variables, and memory.</p></li>
+	<li><p id="12" onmouseover="switchImage(12);" onmouseout="reset();">Before code can be executed, it must be assembled using the wrench tool <img src="assemble.png" style="border: 0; display:inline; margin: 0 2px; box-shadow: none">.</p></li>
+	<li><p id="13" onmouseover="switchImage(13);" onmouseout="reset();">After code is assembled, it can be disassembled from binary to our intermediate representation using the screwdriver icon <img src="disassemble.png" width="25" height="25">. </p></li>
+</ol>
+</div>
+</div>
+<h3>Tabs</h3>
+
+<h4>File</h4>
+
+<ul>
+ <li><p>Includes standard commands for saving and opening files and quitting the program. Currently, the program can only open .txt files. The clear command clears all code out of the editor window and resets the program counter, registers/variables, machine code/graphics, and memory.</p></li>
+</ul>
+
+<h4>View</h4>
+<ul>
+ <li><p>“Toggle graphics screen view” shows/hides the graphic window for YAAL programs. This will not work in RISC mode.</p></li>
+
+ <li><p>“Toggle intermediate code view” shows/hides the intermediate code representation created upon assembly of code.</p></li>
+
+ <li><p>“Toggle machine code view” shows/hides the machine code panel.</p></li>
+</ul>
+
+
+<h4>Program</h4>
+
+<ul>
+ <li><p>“Assemble” and “Disassemble” perform the same assembly/disassembly as pressing the buttons in the toolbar.</p></li>
+
+ <li><p>“Change stack pointer value” allows the user to change the stack pointer starting value to adjust for the size of their program.</p></li>
+
+ <li><p>Toggling “Run program with animation” changes how the program runs. When turned on, each line as it is executed will be highlighted, showing visually the control flow of the program.</p></li>
+
+<li> <p>“Set register/memory address as watchpoint” sets a given register or memory address as a watchpoint and displays all current set watchpoints. When these are set, a statement will be printed each time the given register or memory address is changed while running the program.</p></li>
+
+ <li><p>“Clear all watchpoints” resets the list of watchpoints.</p></li>
+
+ <li><p>“Set run preferences” provides a set of options to determine when to update the display. There is also an option to change the runtime speed, which sets how fast the program runs with animation.</p></li>
+</ul>
+
+
+<h4>Options</h4>
+<ul>
+ <li><p>The "Options" tab allows switching between YAAL and RISC modes.</p></li>
+</ul>
+
+<h4>Help</h4>
+<ul>
+ <li><p>Includes links to the YAAL user's guide and some example YAAL programs. Each page is a webpage opened locally within the program.</p></li>
+</ul>
+
+<h3>Known Bugs</h3>
+<ul>
+ <li> <p>If user presses "play" button multiple times too quickly, the program can return incorrect values (e.g. YAAL - PrimeFactorization)</p></li>
+
+  <li><p>Can't receive spacebar input in YAAL input field</p></li>
+  <li><p>There is a prompt to save even when saved (this is both initially upon open, and right after having saved)</p></li>
+</ul>
+
+
+<h3>Things to Improve</h3>
+<ul>
+  <li><p>Every ParseException thrown is an error, some could be warnings instead and not stop control flow</p></li>
+ <li> <p>Add support for floating point numbers (currently, there is only support for integers)</p></li>
+  <li><p>Make doublewords standard</p></li>
+  <li><p>"la" is not actually two commands, and thus disassembly isn’t really accurate to RISC</p></li>
+  <li><p>Changing text-selection color in editor, if possible</p></li>
+  <li><p>Right-click should bring up context menu with editing options</p></li>
+ <li> <p>Ability to comment/uncomment selected lines</p></li>
+ <li> <p>Ability to adjust default tab indent</p></li>
+ <li> <p>Increase size or length of editor window</p></li>
+ <li> <p>Add a right-edge guide in editor</p></li>
+  <li><p>Implement shortcut for easy selection/deletion of entire line(s)</p></li>
+  <li><p>Implement key shortcut for stepping through program</p></li>
+</ul>
+
+
+</body>
+</html>

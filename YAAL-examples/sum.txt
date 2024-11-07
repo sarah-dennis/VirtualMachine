@@ -1,0 +1,16 @@
+function main()
+	call _sum(10)
+    $y = $$rv
+    call _print($y)
+    call _stop()
+    return
+
+function sum($n)
+    $y = 0
+    if $n < 1 goto _sum_skip
+        $t = $n - 1
+        call sum($t)
+        $y = $$rv
+        $y = $y + $n
+sum_skip:
+    return $y

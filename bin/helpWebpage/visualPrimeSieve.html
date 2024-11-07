@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Click Game</title>
+</head>
+
+<style>
+body {
+    background-color: #F0D8FF;
+}
+
+* {
+	font-family: courier;
+}
+</style>
+
+<body>
+
+<pre>
+
+function main()
+$n = 100
+$a = call _allocate($n)
+call sieve($n, $a) #size of sieve, allocate n bytes, store address at a (s0 -> a0)
+return
+
+function sieve($n, $a)
+$d = 0
+$j = $a #start index for buffer
+$k = $a + $n #length of buffer
+call fill_buffer(1, $n, $a)
+$p = 0 #number of primes
+$c = 2 #current prime
+$e = $n + $a #just past sieve
+
+sieving_loop:
+call _print($c) #print current prime
+$y = $$GRID_INDEX + $c
+store 35 at $y
+$p = $p + 1 #increment number of primes found
+$i = 2 * $c 
+$i = $i + $a # i = sieve_array + 2*currentPrime
+
+if $i >= $e goto sieving_find_next_loop
+
+sieving_inner_loop:
+store 0 at $i; 0
+$i = $i + $c
+
+if $i < $k goto sieving_inner_loop
+	
+sieving_find_next_loop:
+$c = $c + 1
+if $c >= $n goto sieving_loop_end
+$i = $a + $c
+$d = load from $i #current prime in array marked already?
+if $d == 0 goto sieving_find_next_loop
+	
+sieving_find_next_loop_end:
+goto sieving_loop
+
+sieving_loop_end:
+$y = "Number of primes... "
+call _print_string($y)
+call _print($p) 		#answer at p
+return 	
+
+function fill_buffer($f, $n, $a)
+$m = 0
+if $m >= $n goto fill_buffer_exit
+
+fill_buffer_loop:
+store $f at $a; $m
+$m = $m + 1
+if $m < $n goto fill_buffer_loop
+
+fill_buffer_exit:
+return
+	
+</pre>
+	
+<a href="yaal_examples.html">Back</a>	
+	
+</body>
+
+</html>

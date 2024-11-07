@@ -1,0 +1,16 @@
+# text-based timer example
+# prints countdown from 10 down to 1, one number per second
+
+function main()
+         $$TIME = call _read()
+         schedule countdown at 1000
+         return 0
+
+function countdown()
+         if $$TIME <= 0 goto exit
+         call _print($$TIME)
+         $$TIME = $$TIME - 1
+         schedule countdown at 5000
+     
+exit:
+         return

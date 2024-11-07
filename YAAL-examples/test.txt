@@ -1,0 +1,24 @@
+function main()
+$i = 0
+$k = 2
+
+loop:
+if $i == 10 goto exit
+store $i at $k; $i
+$i = $i + 1
+goto loop
+
+exit:
+$i = 0
+
+loop2:
+if $i == 10 goto exit2
+store $k at $j; $i
+$j = $j + 1
+store $j at $k; $i
+$i = $i + 1
+goto loop2
+
+exit2:
+call _stop()
+return

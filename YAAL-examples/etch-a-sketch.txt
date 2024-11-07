@@ -1,0 +1,49 @@
+##Etch-a-sketch
+function main()
+	
+	$$PEN = 2662
+	$$POS = 455 + $$GRID_INDEX
+	store $$PLAYER at $$POS
+	handle key with keyHandler
+	handle click with clickHandler
+	return
+
+function keyHandler($k)
+
+	if $k == 68 goto right #d
+	if $k == 65 goto left #a
+	if $k == 87 goto up #w
+	if $k == 83 goto down #s
+	if $k == 88 goto changeChar #x
+	
+	store 0 at $$POS
+
+  right:
+	$$POS = $$POS + 1
+	goto movePen
+  left:
+	$$POS = $$POS - 1
+	goto movePen
+  up:
+	$$POS = $$POS - 40
+	goto movePen
+  down:
+	$$POS = $$POS + 40
+	goto movePen
+  changeChar:
+	$$PEN = call _random(4000)
+	call _print($$PEN)
+	goto exit
+  movePen:
+	store $$PEN at $$POS
+  exit:
+  	return
+	
+function clickHandler($c)
+	$$POS = $c + $$GRID_INDEX
+	return
+
+
+	
+
+	

@@ -1,0 +1,48 @@
+##TARGET CLICKING GAME
+
+function main()
+	
+	$$SYMBOL = 9786 #smiley face
+	$$TARGETS = 20
+	$$TIME = 30000
+	$$TOTAL_TARGETS = 0
+	call paintRandom($$TARGETS)
+	$s = "GO!"
+	call _print_string($s)
+	handle click with clickHandler
+	schedule timeOut at $$TIME
+	return
+	
+function paintRandom($n)
+	$i = 0
+paintLoop:
+	$x = call _random($$GRID_SIZE)
+	$x = $x + $$GRID_INDEX
+	store $$SYMBOL at $x
+	$i = $i + 1
+	$$TOTAL_TARGETS = $$TOTAL_TARGETS + 1
+	if $i != $n goto paintLoop
+return
+
+
+function clickHandler($x)
+	$h = $x + $$GRID_INDEX
+	$b = load from $h
+	if $b == $$SYMBOL goto successClick
+	call paintRandom(2)
+	goto end
+successClick:
+	store 0 at $h
+	$$TOTAL_TARGETS = $$TOTAL_TARGETS - 1
+	if $$TOTAL_TARGETS != 0 goto end
+	$s = "YOU WIN!"
+	call _print_string($s)
+	call _stop()
+end:
+	return
+
+function timeOut()
+	$s = "TIMES UP!"
+	call _print_string($s)
+	call _stop()
+	return

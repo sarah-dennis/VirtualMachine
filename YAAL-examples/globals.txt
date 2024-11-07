@@ -1,0 +1,17 @@
+# simple example using global variables
+# (modified version of recursive sum)
+
+function main()
+        $$g = 0
+        call sum(5)
+        call _print($$g)
+        return 0  # stop
+  
+
+function sum($n)
+        if $n < 1 goto skip
+        $t = $n - 1
+        $t = call sum($t)
+        $$g = $$g + $n
+skip:
+        return

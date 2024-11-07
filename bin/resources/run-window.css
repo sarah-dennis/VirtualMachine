@@ -1,0 +1,52 @@
+.root {
+	-fx-font-family: 'Courier New';
+	-fx-font-weight: bold;
+	-fx-background: #f0d8ff; /* light purple */
+	-fx-control-inner-background: #f4f4f4; /* off-white base color */
+	-fx-font-size: 13px;
+}
+
+/* note: the light pink background color of the symbol table pane is #f9caf2 */
+
+.code-area {
+	-fx-border-color: darkgrey;
+	-fx-border-width: 2px;
+	-fx-background-color: #f4f4f4; /* off-white base color */
+}
+
+.button {
+	-fx-background-color: orchid;
+	-fx-border-radius: 5;
+}
+
+#error-field {
+	-fx-background-color: lightgrey;
+}
+
+#abstract-area {
+	-fx-background-color: lightgrey;
+}
+
+.menu-bar {
+	-fx-background-color: darkorchid; 
+}
+
+.menu-button {
+	-fx-background-color: orchid;
+}
+
+.tool-bar {
+	-fx-background-color: #f0d8ff; /* light blue-purple */
+}
+
+.highlight-text {
+	-rtfx-background-color: violet;
+}
+
+.unhighlight-text {
+	-rtfx-background-color: #f4f4f4; /* off-white base */
+}
+
+.unhighlight-abstract {
+	-rtfx-background-color: lightgrey;
+}

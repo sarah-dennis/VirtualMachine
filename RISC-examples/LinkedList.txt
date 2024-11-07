@@ -1,0 +1,227 @@
+# RiSC-V implementation of a linked list of strings
+#
+.data
+#-------------------------------------------------
+# Constants
+#-------------------------------------------------
+
+MAX_STR_LEN: .word 50
+#-------------------------------------------------
+# Code
+#-------------------------------------------------
+.text
+
+# main: repeatedly gets strings from user and enters them in list
+# 	until a string of length less than two is entered;
+# 	prints list in order when done
+
+main:
+	li   s0, 0  # initialize the list to NULL
+
+Loop_main:
+	jal  read_string
+	mv s1, a0
+
+	mv a0, s1
+	jal  strlen
+	slti t0, a0, 2
+	bne  t0, zero, Exit_loop_main
+	
+	mv a0, s0
+	mv a1, s1
+	jal  insert
+	mv s0, a0 # resassign the head of the list
+
+	j    Loop_main
+
+Exit_loop_main:
+	mv a0, s0
+	jal  print_list
+
+ 	# exit simulation via syscall
+	li a7, 10
+	ecall
+
+#-------------------------------------------------
+# String routines
+#-------------------------------------------------
+
+
+# strlen: given string stored at address in $a0
+# 	  returns its length in $a0
+strlen:
+	mv t0, a0
+Loop_strlen:
+	lb   t1, 0(t0)
+	beq  t1, zero, Exit_strlen
+	addi t0, t0, 1
+	j    Loop_strlen
+Exit_strlen:
+	sub  a0, t0, a0 #check supposed to be stored in a0
+	jr ra
+
+
+# strcmp: given strings s, t stored at addresses in $a0, $a1
+# 	  returns -1 if s < t; 0 if s == t, 1 if s > t
+strcmp:
+	mv t0, a0
+	mv t1, a1
+
+Loop_strcmp:
+	lb   t2, 0(t0) #WAS LBU
+	lb   t3, 0(t1) #WAS LBU
+	beq  t2, zero, Endloop_strcmp
+	bne  t2, t3, Endloop_strcmp
+	addi t0, t0, 1
+	addi t1, t1, 1
+	j    Loop_strcmp
+
+Endloop_strcmp:
+	beq  t2, t3, Eq_strcmp
+	slt  t0, t2, t3
+	bne  t0, zero, Lt_strcmp
+	li   a0, 1 
+	j    Exit_strcmp
+
+Lt_strcmp:
+	li   a0, -1 
+	j    Exit_strcmp
+
+Eq_strcmp:
+	li   a0, 0 
+
+Exit_strcmp:
+	jr ra
+
+
+# insert_here: given address of front of list in $a0
+# 	       and address of string to insert in $a1,
+# 	       inserts new linked-list node in front of list;
+# 	       returns address of new front of list in $a0
+insert_here:
+	addi sp, sp, -12
+	sw   ra, 0(sp)
+	sw   s0, 4(sp)
+	sw   s1, 8(sp)
+
+	mv   s0, a0
+	mv   s1, a1
+	li   a0, 8   # a node requires two words of memory
+	jal  malloc
+	# a0 now points to new node
+	sw   s1, 0(a0)  # node->value = string
+	sw   s0, 4(a0)  # node->next  = former head of list
+
+	lw   s1, 8(sp)
+	lw   s0, 4(sp)
+	lw   ra, 0(sp)
+	addi sp, sp, 12
+	jr ra
+
+#-------------------------------------------------
+# List routines
+#-------------------------------------------------
+
+# insert: given address of front of list in $a0
+# 	  and address of string to insert in $a1,
+# 	  inserts new linked-list node in appropriate place in list
+# 	  (in this case so as to preserve alpahbetical order);
+#	  returns address of new front of list in $a0
+insert:
+	addi sp, sp,-20
+	sw   ra, 0(sp)
+	sw   s0, 4(sp)
+	sw   s1, 8(sp)
+	sw   s2, 12(sp)
+	sw   s3, 16(sp)
+
+	mv   s0, a0 # the current node
+	mv   s1, a1 # the string to be inserted
+	li   s2, 0   # previous = null
+	mv   s3, s0 # keep another copy, so we can remember head of list
+
+Loop_insert: # loop until either current node is null or string < node->value
+  	beq  s0, zero, Endloop_insert # stop loop
+	mv   a0, s1
+	lw   a1, 0(s0)
+  	jal  strcmp
+  	slt  t0, a0, zero
+	bne  t0, zero, Endloop_insert
+	mv   s2, s0
+	lw   s0, 4(s0)
+	j    Loop_insert
+
+Endloop_insert:
+	mv a0, s0
+	mv a1, s1
+	jal  insert_here
+	beq  s2, zero, Skip_insert
+	sw   a0, 4(s2)  # previous->next = new node
+	mv a0, s3     # return original head if it was not null
+
+Skip_insert:
+	lw   s3, 16(sp)
+	lw   s2, 12(sp)
+	lw   s1, 8(sp)
+	lw   s0, 4(sp)
+	lw   ra, 0(sp)
+	addi sp, sp, 20
+	jr ra
+
+
+# print_list: given address of front of list in $a0
+# 	        prints each string in list, one per line, in order
+print_list:
+	addi sp, sp, -8
+	sw   ra, 0(sp)
+	sw   s0, 4(sp)
+
+	mv   s0, a0
+	beq  s0, zero, Exit_print_list
+
+Loop_print_list:
+	lw   a0, 0(s0)
+	jal  print_string
+	lw   s0, 4(s0) # node = node->next
+	bne  s0, zero, Loop_print_list
+
+Exit_print_list:
+	lw   s0, 4(sp)
+	lw   ra, 0(sp)
+	addi sp, sp, 8
+	jr ra
+
+
+
+#-------------------------------------------------
+# Pseudo-standard library routines:
+#   wrappers around RISC ecalls
+#-------------------------------------------------
+
+# assumes buffer to read into is in $a0, and max length is in $a1
+get_string:
+	li a7, 8
+    ecall
+	jr ra
+
+# malloc: takes one argument (in $a0) which indicates how many bytes
+#         to allocate; returns a pointer to the allocated memory (in a0)
+malloc:
+  	li a7, 9  # SPIM code for "sbrk" memory allocation
+ 	ecall
+  	jr ra
+
+# print_string: displays supplied string (in $a0) to standard output
+print_string:
+	li a7, 4
+	ecall
+	jr ra
+	
+# read_string: allocates MAX_STR_LEN bytes for a string;
+#	       reads a string into that memory address
+# 	       returns the address in $a0
+
+read_string:
+	li a7, 8
+	ecall
+	jr ra

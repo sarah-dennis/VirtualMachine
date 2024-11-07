@@ -1,0 +1,10 @@
+#this is a test of the save operation
+function main()
+	$index = 0
+loop:
+	if $index == $$COLUMNS goto end
+	store 42 at $$GRID_INDEX; $index
+	$index = $index + 1
+	goto loop
+end:
+	return 0

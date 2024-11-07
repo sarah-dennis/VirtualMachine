@@ -1,0 +1,25 @@
+# simple example using global variables
+# (modified version of recursive sum)
+
+function main()
+        $$g = 0
+        
+        $message = "Calculate sum up to..."
+        call _print_string($message)
+		$x = call _read()
+        call sum($x)
+        
+        $message = "Result..."
+        call _print_string($message)
+        
+        call _print($$g)
+        return 0  # stop
+  
+
+function sum($n)
+        if $n < 1 goto skip
+        $t = $n - 1
+        $t = call sum($t)
+        $$g = $$g + $n
+skip:
+        return

@@ -1,0 +1,20 @@
+#Ulam: counts cycles to get to 1
+
+li a0, 3 #expect answer 7 
+li s0, 1
+
+loop: beq a0, s0, loop_exit
+andi t0, a0, 1
+bne t0, zero, odd
+srli a0, a0, 1
+j merge  
+
+odd: add t1, a0, a0
+add a0, a0, t1
+addi a0, a0, 1
+merge:
+addi t2, t2, 1
+j loop  
+
+loop_exit: 
+mv a0, t2

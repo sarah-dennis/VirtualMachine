@@ -1,0 +1,35 @@
+function main() 				#computes (b^e) mod m
+	$message = "Calculate modular exponentiation of..."
+	call _print_string($message)
+	$b = call _read() 	#b -> number
+	$exponent = "To the power of..."
+	call _print_string($exponent)
+	$e = call _read()	#e -> exponent
+	$base = "mod..."
+	call _print_string($base)
+	$m = call _read()  #m -> modulus				
+	
+	call fruit($b, $e, $m)
+
+	return 0
+
+function fruit($b, $e, $m)
+	$r = 1
+loop:
+	if $e <= 0 goto loop_end		#while exponent > 0
+	$p = $e % 2 					#p -> parity
+	if $p == 0 goto loop_cont 	#if p is odd... do these 2 steps
+		$r = $r * $b
+		$r = $r % $m
+		
+loop_cont:
+	$e = $e / 2
+	$b = $b * $b
+	$b = $b % $m
+	goto loop
+
+loop_end:
+	$result = "Result..."
+	call _print_string($result)
+	call _print($r)
+	return $r

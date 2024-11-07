@@ -1,0 +1,20 @@
+# text-based timer example
+# prints countdown from 10 down to 1, one number per second
+
+function main()
+		 handle key with keyHandler
+         $$time = 10
+         schedule countdown at 10000
+         return 0
+
+function countdown()
+         if $$time <= 0 goto exit
+         call _print($$time)
+         $$time = $$time - 1
+         schedule countdown at 500
+     
+exit:
+         return
+
+function keyHandler($k)
+		call _print_char($k)

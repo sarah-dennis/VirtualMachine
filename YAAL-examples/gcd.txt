@@ -1,0 +1,31 @@
+#GCD 
+
+function start() 
+	   $$MESSAGE = "Calculate gcd of..."
+	   call _print_string($$MESSAGE)
+	   $a = call _read()
+	   $b = call _read()
+	   call gcd($a, $b)
+	   
+	   return
+
+function gcd($a, $b)  
+loop: 
+      if $b == 0 goto exit
+	  $t = $b
+	  $b = $a % $b
+	  $a = $t
+	  goto loop
+	  
+exit: 
+	  $$MESSAGE = "result..."
+	  call _print_string($$MESSAGE)
+	  call _print($a)
+	  if $a == 1 goto rel_prime
+	  return
+	  
+rel_prime:
+	  $$MESSAGE = "Relatively Prime!!"
+	  call _print_string($$MESSAGE)
+	  return
+	  

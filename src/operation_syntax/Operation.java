@@ -1,0 +1,13 @@
+package operation_syntax;
+
+public enum Operation {
+	
+	ADD, SUB, MULT, DIV, REM,
+	DIV_U, REM_U,
+	SHIFT_LEFT, SHIFT_RIGHT_L, SHIFT_RIGHT_A,
+	X_OR, AND, OR, 
+	EQUAL, NOT_EQUAL,
+	LESS, LESS_U, LESS_EQUAL, LESS_EQUAL_U,
+	GREATER, GREATER_U, GREATER_EQUAL, GREATER_EQUAL_U
+		
+}

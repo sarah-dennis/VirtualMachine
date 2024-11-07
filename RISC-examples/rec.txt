@@ -1,0 +1,25 @@
+main:   li a0, 5             # recursively add 5 + 4 + 3 + 2 + 1 = 15
+        jal rec_sum 
+		j exit   
+   
+      
+rec_sum:
+        bne a0, zero, rec_sum_recurse
+        jr ra
+
+rec_sum_recurse:
+        addi sp, sp, -8     # grow the stack to store 2 words
+        sw ra, 4(sp)
+        sw s0, 0(sp)
+        mv s0, a0
+        addi a0, a0, -1
+        jal rec_sum         # call rec_sum(n-1)
+        add a0, s0, a0
+        lw s0, 0(sp)        # restore the old value of $a0 (n)
+        lw ra, 4(sp)
+        addi sp, sp, 8      # shrink the stack back by 2 words
+
+        jr ra
+exit:
+	mv s0, a0 			   # final answer in s0
+	

@@ -1,0 +1,52 @@
+function first()
+	call second()
+	$j = 88
+	return
+function second()
+	$a = 1
+	call third()
+	$z = 100
+	return
+function third()
+	$b = 2
+	call fourth()
+	$y = 99
+	return
+function fourth()
+	$c = 3
+	call fifth()
+	$x = 98
+	return
+function fifth()
+	$d = 4
+	call sixth()
+	$w = 97
+	return
+function sixth()
+	$k = 5
+	call seventh()
+	$v = 96
+	return
+function seventh()
+	$e = 6
+	call eigth()
+	$u = 95
+	return
+function eigth()
+	$f = 7
+	call ninth()
+	$t = 94
+	return
+function ninth()
+	$g = 8
+	call tenth()
+	$s = 93
+	return
+function tenth()
+	$h = 9
+	call eleventh()
+	$r = 92
+	return
+function eleventh()
+	$i = 10
+	return

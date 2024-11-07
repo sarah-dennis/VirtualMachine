@@ -1,0 +1,147 @@
+function main()
+	$num = call _random(105)
+	call animal_generate($num)
+	$message_a = "I'm thinking of a letter..."
+	$message_b = "...can you guess what it is?"
+	$message_c = "Type your best guess."
+	call _print($message)
+	call _print($message)
+	call _print($message)
+	handle key with key_handler
+	return
+	
+	
+function key_handler($k)
+start:
+	if $k == $$letter goto win
+	$l = "Sorry, incorrect!"
+	call _print($l)
+	goto start
+	
+win:
+	$w = "You're correct!"
+	call _print($w)
+	return
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+function animal_generate($n)
+	if $n < 4 goto handle_a
+	if $n < 8 goto handle_b
+	if $n < 12 goto handle_c
+	if $n < 16 goto handle_d
+	if $n < 20 goto handle_e
+	if $n < 24 goto handle_f
+	if $n < 28 goto handle_g
+	if $n < 32 goto handle_h
+	if $n < 36 goto handle_i
+	if $n < 40 goto handle_j
+	if $n < 44 goto handle_k
+	if $n < 48 goto handle_l
+	if $n < 52 goto handle_m
+	if $n < 56 goto handle_n
+	if $n < 60 goto handle_o
+	if $n < 64 goto handle_p
+	if $n < 68 goto handle_q
+	if $n < 72 goto handle_r
+	if $n < 76 goto handle_s
+	if $n < 80 goto handle_t
+	if $n < 84 goto handle_u
+	if $n < 88 goto handle_v
+	if $n < 92 goto handle_w
+	if $n < 96 goto handle_x
+	if $n < 100 goto handle_y
+	$$letter = 'z'
+	return
+	
+handle_a:
+	$$letter = 'a'
+	return
+handle_b:
+	$$letter = 'b'
+	return
+handle_c:
+	$$letter = 'c'
+	return
+handle_d:
+	$$letter = 'd'
+	return
+handle_e:
+	$$letter = 'e'
+	return
+handle_f:
+	$$letter = 'f'
+	return
+handle_g:
+	$$letter = 'g'
+	return
+handle_h:
+	$$letter = 'h'
+	return
+handle_i:
+	$$letter = 'i'
+	return
+handle_j:
+	$$letter = 'j'
+	return
+handle_k:
+	$$letter = 'k'
+	return
+handle_l:
+	$$letter = 'l'
+	return
+handle_m:
+	$$letter = 'm'
+	return
+handle_n:
+	$$letter = 'n'
+	return
+handle_o:
+	$$letter = 'o'
+	return
+handle_p:
+	$$letter = 'p'
+	return
+handle_q:
+	$$letter = 'q'
+	return
+handle_r:
+	$$letter = 'r'
+	return
+handle_s:
+	$$letter = 's'
+	return
+handle_t:
+	$$letter = 't'
+	return
+handle_u:
+	$$letter = 'u'
+	return
+handle_v:
+	$$letter = 'v'
+	return
+handle_w:
+	$$letter = 'w'
+	return
+handle_x:
+	$$letter = 'x'
+	return
+handle_y:
+	$$letter = 'y'
+	return

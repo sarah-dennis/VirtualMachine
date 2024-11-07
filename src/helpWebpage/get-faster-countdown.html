@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Click Game</title>
+</head>
+
+<style>
+body {
+    background-color: #F0D8FF;
+}
+
+* {
+	font-family: courier;
+}
+</style>
+
+<body>
+
+<pre>
+# text-based timer example
+# prints countdown from 10 down to 1, one number per second
+
+function main()
+         $$TIME = 15
+         $$DELAY = 1000
+         schedule countdown at $$DELAY
+         return 0
+
+function countdown()
+start:
+         if $$TIME <= 0 goto exit
+         call _print($$TIME)
+         $$TIME = $$TIME - 1
+         $$DELAY = $$DELAY - 100
+         if $$DELAY == 0 goto reset
+         schedule countdown at $$DELAY
+     
+exit:
+         return
+
+reset:
+	$$DELAY = $$DELAY + 100
+	goto start
+</pre>
+	
+<a href="yaal_examples.html">Back</a>	
+	
+</body>
+
+</html>

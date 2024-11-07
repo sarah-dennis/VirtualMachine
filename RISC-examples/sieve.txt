@@ -1,0 +1,51 @@
+main: addi s1, zero, 100
+	add a0, s0, zero
+	add a1, s1, zero
+	jal ra, sieve
+	
+sieve:addi sp, sp, -12
+	sw ra, 8(sp)
+	sw s0, 4(sp)
+	sw s1, 0(sp)
+	add s0, a0, zero
+	add s1, a1, zero
+	addi a2, zero, 1
+	jal ra, fill_buffer
+	addi t0, zero, 0
+	addi t1, zero, 2
+	add t2, s0, s1
+sieving_loop:addi t0, t0, 1
+	slli t3, t1, 1
+	add t3, s0, t3
+	slt t4, t3, t2
+	beq t4, zero, sieving_inner_loop
+sieving_inner_loop: sb zero, 0(t3)
+	add t3, t3, t1
+	slt t4, t3, t2
+	bne t4, zero, sieving_inner_loop	
+sieving_find_next_loop: addi t1, t1, 1
+	slt t4, t1, s1
+	beq t4, zero, sieving_loop_end
+	add t3, s0, t1
+	lb t4, 0(t3)
+	beq t4, zero, sieving_find_next_loop
+sieving_find_next_loop_end: jal zero, sieving_loop
+sieving_loop_end:add s8, zero, t0
+	lw ra, 8(sp)
+	lw s0, 4(sp)
+	lw s1, 0(sp)
+	addi sp, sp, 12
+	
+	jal zero, exit
+	
+fill_buffer:add t0, zero, a0
+	add t1, a0, a1
+	slt t2, t0, t1
+	beq t2, zero, fill_buffer_exit
+fill_buffer_loop: sb a2, 0(t0)
+	addi t0, t0, 1
+	slt t2, t0, t1
+	bne t2, zero, fill_buffer_loop
+fill_buffer_exit: jalr zero, ra, 0
+
+exit: addi t0, t0, 0

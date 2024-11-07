@@ -1,0 +1,43 @@
+function main()
+    $h = "stringLiteralTest"   # string literal
+    call _print_string($h)
+    $s = call _allocate(4)
+    store 'H' at $s; 0
+    store 'i' at $s; 1
+    store '!' at $s; 2
+    store 10 at $s; 2
+    store 0 at $s; 3
+
+    $n = call string_length($s)
+	$m = "string length..."
+	call _print_string($m)
+    call _print($n)
+    call _print_char(10)   # '\n'
+    call print_string($s)
+    call _print_char(10)   # '\n'
+    call _print($h)
+
+    return 0
+
+
+function print_string($s)
+    $i = 0
+loop:
+    $c = load from $s; $i
+    if $c == 0 goto loop_exit
+        call _print_char($c)
+        $i = $i + 1
+    goto loop
+loop_exit:
+    return 0
+    
+
+function string_length($s)
+    $i = 0
+loop:
+    $c = load from $s; $i
+    if $c == 0 goto loop_exit
+        $i = $i + 1
+    goto loop
+loop_exit:
+    return $i

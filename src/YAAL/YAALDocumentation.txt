@@ -1,0 +1,183 @@
+
+
+YAAL Documentation
+
+-------------------------*About*-----------------------------------------------
+
+	The YAAL programming language (Yonkers Abstract Assembly Language) was created 
+for the purpose of teaching novice programmers not only the fundamentals of 
+programming, but assembly language as well. The language runs on a virtual machine 
+written in Java that uses an intermediate representation to adapt to different 
+assembly languages. The language uses core principles of assembly language, such as 
+the restriction of one operation per line and the usage of labels for branching.
+However, some of the more complicated concepts present in assembly language are 
+hidden from the user here, such as bit manipulation and usage of a stack. This
+choice was made because we felt these concepts were too technical and unnecessary
+for a beginner programmer. 
+	Beyond hiding some assembly language instructions for the purpose of simplicity, 
+we also incorporated some syntax from high-level programming languages for the user's 
+ease. Variables can be created and assigned with a standard equals sign, 
+such as "x = b + 3". Branching, instead of being in the form of "branch equal"
+or "branch less than", are now if/goto statements. More complex arithmetic
+operations, such as multiply, divide, and modulo, can be performed in a single 
+instruction. All arithmetic and boolean operations can also be represented in their 
+traditional symbolic notation.
+
+-------------------------*YAAL Standards*--------------------------------------
+
+	Listed below are some standards for the YAAL language that must be adhered to 
+in order to have a functioning and successful program:
+
+	* All parts of the program must fall within the range of a function. Functions must
+	  end with a return statement.
+		 >> function {nameOfFunction} ({arg1, arg2,...})
+	 	 >>		...
+	 	 >>	return
+	
+	* Labels within each function must be unique within the range of the function.
+	  
+	* Unlike standard assembly language, variables may be either global or local.
+	  Local variables are active within the function they are declared, and should
+	  be referenced with $. Global variables will be accessible throughout
+	  the users program and should be referenced with $$.
+	
+	* As in standard assembly language, call/goto statements can only be directed to
+	  an existing label, function, or known system operation (listed below).
+	  
+	* In a function call, or an arithmetic or boolean operation, the variables 
+	  used must be existing pre-defined variables.
+	  
+	* There can be at most one operation per line. For example, "$a = $b + $c" is 
+	  acceptable, but "$a = $b + $c + $d" is not.
+	  
+	* As in standard assembly language, the program runs in a "fall-through" 
+	  structure. Thus if function 2 is directly below function 1 and there is no
+	  jump, branch, or stop at the end of function 1, the program will continue to
+	  function 2. Be wise and considerate of your program's structure.
+	  
+	* An 'if' statement must have a boolean operation immediately following the 
+	  command.
+
+-------------------------*Instruction List*------------------------------------
+
+	Below is a list of keyword instructions implemented in the YAAL language and
+	a description of their functionality.
+
+    *** if {boolean operation} goto {label}  
+    		* The if statement functions strictly as a branch type instruction, and is
+    	  	  equivalent to the branch instruction that corresponds to its boolean 
+    	  	  operator. For example, "if x == 0 goto exit" is equivalent to 
+    	  	  "beq t0, zero, exit" in MIPS, where the value of x is stored in t0. Since
+    	  	  if is strictly a branch, it is unlike the high-level if where a series of
+    	  	  operations can immediately follow. The statement MUST have a corresponding
+    	  	  goto and a valid label following. 
+    	  
+    *** goto {label}
+        * The stand alone goto command functions as a jump-type instruction, and will
+          update the program counter to the position of the label. Goto does NOT save
+          the return address, so there is no jump-and-link capability with this 
+          instruction. 
+          
+    *** label: {instruction}
+        * A label is a string of alphabetic characters used to identify functions
+          and/or lines for the program to jump to. A label can be on the same line
+          as the instruction, or on the line below it. There can be extra whitespace 
+          between the label and instruction, as long as there are no other illegal 
+          characters in between. A label MUST be followed by a colon and must be the 
+          first non-whitespace character in the line it is on. 
+          
+    *** call {function} ( {arguments} )
+        * The call functions as a jump-type instruction, like goto, but the crucial 
+          difference is the return address is saved. Thus, if the programmer wants to
+          create a jump-and- link instruction, this is the function they would use. 
+          When return is called, the program counter will jump back to this line.
+         
+    *** return {optionalReturnValue}
+        * The return function will set the program counter to the return address and 
+          thus jump to the last line where the return address was stored. If it has not
+          been stored, the return function will jump to line 0. 
+         
+    *** store {x} into {MemoryAddress} ; {Offset}
+        * This function takes the given x (which can be a number or variable, in which 
+          it will take the value stored at the variable) and puts the value at the given 
+          numerical position in the variable. This is useful for the creation and manipulation 
+          of arrays.
+         
+    *** load {x} from {MemoryAddress} ; {Offset}
+        * This function takes the value at the numerical position in the first variable 
+        	  and assigns it to the second variable. This is useful for the creation 
+        	  and manipulation of arrays.
+      
+      -------------------------*System Operations*------------------------------------
+      These are built in functions that facilitate user interaction with the interface 
+      These functions may be called in the form 
+      
+      	call {system_operation}
+      
+    *** _stop ()
+        * This ends the program upon the program counter's arrival at this line. 
+      
+    *** _print ({variable})
+        * This function displays a text integer version of the data assigned to the given 
+          variable in the window's output field. This is useful for displaying the 
+          "answer" to a program and for debugging.
+               
+    *** _print_string ({variable})
+        * This function displays a text string version of the data assigned to the given 
+          variable in the window's output field. This is useful for displaying the 
+          "answer" to a program and for debugging.
+    
+    *** _read ({variable})
+        * This function will ask the user to enter a value, which will then be assigned to the 
+          specified variable. This input will be parsed as an integer.
+          
+     *** _read_string ({variable})
+        * This function will ask the user to enter value. This value will parsed as a string
+       	  and stored into main memory. The starting address in memory of this string will be 
+       	  stored at the specified variable.   
+     
+    *** _allocate ({variable},{integer})
+        * This function allocates a set amount of memory, with the amount determined 
+          by the integer argument. The start address of this chunk of memory will be
+          stored in the specified variable argument. This is useful for creating arrays, 
+          and setting aside the proper amount of memory to do so.
+
+    *** _random ({variable},{integer})
+    		* This function saves a random positive integer (less than the specified integer)
+    		  into the specified variable.
+    		  
+    	*** _clear_graphics()
+    		* This function will wipe the graphics screen (if in use)
+    		
+    	*** _clear_memory()
+    		* This function will ENTIRELY clear the main memory (not including registers or variables).
+    		  
+		-------------------------*Graphics Operations*------------------------------------
+    		Similar to system operations, these are built in functions that allow the user to interact with 
+    		the built in graphics environment.
+    		
+    	*** handle key with {function}
+    		* This special command will allow the user to specify a function that maps keys to different actions.
+    		  This function is like any other the user may write. For example:
+    				>> function exampleKeyHandler($k) 
+    				>>		call _print_char($k)
+    		  would print back the key the user pressed. Upon running the program, the user may now press a
+    		  key at any time and the key handling function will be called.
+    	
+    	*** handle click with {function}
+    		* This special command works near identically to key handling above. The user may specify a function 
+    		  that maps click coordinates keys to different actions. For example:
+    				>> function exampleClickHandler($k) 
+    				>>		call _print_int($k)
+    		  would print back the coordinates of a click. Upon running the program, the user may click anywhere 
+    		  in the graphics environment, and the click handling function will be called.
+    	
+    	*** schedule {function} at {integer}
+    		* This special command will allow the user to log some function to execute in the future. The function
+    		  should be declared normally anywhere else in the program. The integer argument value is the time in
+    		  milliseconds after which the function should be executed.
+    	
+    	
+    	
+    	
+    	

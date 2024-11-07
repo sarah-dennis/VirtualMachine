@@ -1,0 +1,26 @@
+function main()
+	$input = call _read()
+	call ulam($input)
+	return
+	
+	
+function ulam($v)
+	$bottom = 1
+	$counter = 0
+	
+loop:
+	if $v == $bottom goto loop_exit
+	$parity = $v % 2
+	if $parity == 0 goto even
+	$v = $v * 3
+	$v = $v + 1
+	$counter = $counter + 1
+	goto loop
+even:
+	$v = $v / 2
+	$counter = $counter + 1
+	goto loop
+loop_exit:
+	call _print($counter)
+	
+	

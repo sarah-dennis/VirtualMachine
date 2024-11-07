@@ -1,0 +1,29 @@
+function main() 				#computes (b^e) mod m
+	call _read () 	#b -> number
+	$b = $$rv
+	call _read ()	#e -> exponent
+	$e = $$rv
+	call _read ()  #m -> modulus	
+	$m = $$rv				
+	
+	call fruit($b, $e, $m)
+	call _print($$rv)
+	return 0
+
+function fruit($b, $e, $m)
+$r = 1
+loop:
+	if $e <= 0 goto loop_end		#while exponent > 0
+	$p = $e % 2 					#p -> parity
+	if $p == 0 goto loop_cont 	#if p is odd... do these 2 steps
+		$r = $r * $b
+		$r = $r % $m
+		
+loop_cont:
+	$e = $e / 2
+	$b = $b * $b
+	$b = $b % $m
+	goto loop
+
+loop_end:
+	return $r
